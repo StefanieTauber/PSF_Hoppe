@@ -5,9 +5,12 @@ Hoppe_Urn = function(sigma, theta, n){
 ### n is the number of ball that shall be drawn)
 	
 ### urn rules are as follows: initially there is one black ball (the "mutator") in the urn with weight theta. Then you always sample with replacement. If a black ball is drawn, it is put back, and 2 additional balls are added. One black ball with weight sigma and one ball with a new color with weight (1-sigma). If a colored ball is drawn it is put back and another ball of the same color with unit weight is added.
+### The black ball is coded with '1'. Each new color is represented by a new integer number.
 
 	urn_updated = c(1,1,2)
 	prob_updated = c(theta, sigma, 1-sigma)
+
+### this is the result after 1 draw. At the beginning one black ball is in the urn. After the first draw there are 2 black balls and 1 colored ball.
 	
 	urn_orig = urn_updated
 	
@@ -61,7 +64,10 @@ Hoppe_Urn = function(sigma, theta, n){
 	
 }
  ### return value: 
- ### orig_urn: all balls which are not black
+ ### orig_urn: list all colored balls in the order of their appearance
+ ### urn_updated: lists all colors which are present in the urn
+ ### prob_updated: lists the present weights for each color in the urn
+
 return(list(orig_urn = urn_orig[urn_orig>1], urn_updated = urn_updated, prob_updated = prob_updated))
 	
 }
@@ -77,4 +83,4 @@ Hoppe_Urn(-0.5,2,10)
 max(Hoppe_Urn(-0.5,2,10000)$urn_updated) # if we sample really a lot, we see the highest number is 5, which means that there are 4 colored balls (as 1 is the black ball) 
 # infinite universe, high innovation rate, draw 10 balls, at maximum 8 colored balls possible
 Hoppe_Urn(0.5,4,10)
-max(Hoppe_Urn(-0.5,4,10000)$urn_updated) # if we sample really a lot, we see the highest number is 9, which means that there are 8colored balls (as 1 is the black ball) 
+max(Hoppe_Urn(-0.5,4,10000)$urn_updated) # if we sample really a lot, we see the highest number is 9, which means that there are 8 colored balls (as 1 is the black ball) 

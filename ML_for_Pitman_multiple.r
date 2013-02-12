@@ -14,17 +14,19 @@ LogAscFact <- function(a,n) {
 ### PSF for infinite sampling universe, optimize parameters for multiple frequency vectors ###
 ##############################################################################################
 
+## typical use-case: if you want to estimate one common theta and sigma for distribution of reads within a gene over all genes
+
 ## param: [type = "vector"]: 
 ## depicts the parameter vector c(theta,sigma)
 
 ## freq: [type = "list"]:
-## each slot of the list contains the number of reads starting at each position for one gene (G-level case). Positions where 0 reads start can be neglected. The order of the slots does not matter. The length of the list corresponds to the number of genes you want to integrate in the analysis
+## each slot of the list contains the number of reads starting at each position for one gene. Positions where 0 reads start can be neglected. The order of the slots does not matter. The length of the list corresponds to the number of genes you want to integrate in the analysis
 
 ## k: [type = "numeric vector"]:
-## contains the number of positions where at least 1 read starts for each gene (G-level case) 
+## contains the number of positions where at least 1 read starts for each gene 
 
 ## n: [type = "numeric vector"]: 
-## contains the sum of reads mapping to the respective gene (G-level case)
+## contains the sum of reads mapping to the respective gene
 
 
 ## infinite sampling universe: sigma within [0,1) and theta > - sigma
@@ -74,32 +76,5 @@ Gradient_LogPitman_multiple_infinite <- function(param,n,k,sum_n) {
 #  optim(par=c(0.01,0.01), fn = LogPitman_multiple_infinite, gr = Gradient_LogPitman_multiple_infinite, freq = freq, k = k, n = n, control = list(fnscale=-1)
  
  
-############################################################################################ 
-### PSF for finite sampling universe, optimize parameters for multiple frequency vectors ###
-############################################################################################
 
-
-## finite sampling universe: theta = m*|sigma| and sigma is smaller zero
-## in the G-level case m = length of the gene (not more than "length of gene" positions can possibly get selected as SP
-## Log of Pitman is easier to compute
-## freq, k, n: like above
-
-## lot: [type = "numeric vector"]
-## contains the length of the corresponding genes
-
-
-LogPitman_multiple_finite <- function(theta,freq,k,n,lot) {
-
-  tmp = 0
-  
-  for (i in 1:length(k)){
-  
-  tmp = tmp + sum(log(theta + c(1:(k[i]-1))*(-theta/lot[i])))- LogAscFact(theta+1,n[i]-1)+sum(mapply(LogAscFact,rep(1-(-theta/lot[i]),k[i]),freq[[i]]-1))}
-  
-  return(tmp)}
-  
-  
-## example use: 
-# optimize(LogPitman_multiple_finite, interval = c(1,10000), freq, k, n,lot)$maximum
-  
 

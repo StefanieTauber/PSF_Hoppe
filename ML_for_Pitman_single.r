@@ -19,14 +19,13 @@ LogAscFact <- function(a,n) {
 ## depicts the parameter vector c(theta,sigma)
 
 ## freq: [type = "numeric vector"]:
-## give the read counts per gene (T-level case) or the number of reads starting at each position (G-level case). Genes with 0 reads or positions where 0 reads start can be neglected. The order of freq does not matter
+## give the read counts per gene or the number of reads starting at each position. Genes with 0 reads or positions where 0 reads start can be neglected. The order of freq does not matter
 
 ## k: [type = "numeric"]:
-## number of genes with at least 1 count (T-level case) or number of positions where at least 1 read starts (G-level case) 
+## number of genes with at least 1 count or number of positions where at least 1 read starts 
 
 ## n: [type = "numeric"]: 
-## sum of counts (T-level case) or sum of reads mapping to the gene (G-level case)
-
+## sum of counts or sum of reads mapping to the gene 
 
 ## infinite sampling universe: sigma within [0,1) and theta > - sigma
 ## Log of Pitman is easier to compute
@@ -65,13 +64,11 @@ Gradient_LogPitman_single_infinite <- function(param,freq,k,n) {
 
 
 ## finite sampling universe: theta = m*|sigma| and sigma is smaller zero
-## in the G-level case m = length of the gene (not more than "length of gene" positions can possibly get selected as SP)
-## in the T-level case m = maximum number of transcripts expressed in the respective sequencing sample
-## Log of Pitman is easier to compute
+## m might be either the length of the gene or the maximum number of transcripts that may be expressed in the respective sequencing sample
+
 ## freq, k, n: like above
 
-## lot: [type = "numeric"]
-## size of transcript universe and, respectivley, length of respective transcript or gene
+## lot: [type = "numeric"] size of transcript universe and, respectivley, length of respective transcript or gene
 
 
 
@@ -96,14 +93,13 @@ LogPitman_single_finite <- function(theta,freq,k,n,lot) {
 ## depicts the parameter vector c(theta,m)
 
 ## freq: [type = "numeric vector"]:
-## give the read counts per gene (T-level case) or the number of reads starting at each position (G-level case). Genes with 0 reads or positions where 0 reads start can be neglected. The order of freq does not matter
+## give the read counts per gene or the number of reads starting at each position. Genes with 0 reads or positions where 0 reads start can be neglected. The order of freq does not matter
 
 ## k: [type = "numeric"]:
-## number of genes with at least 1 count (T-level case) or number of positions where at least 1 read starts (G-level case) 
+## number of genes with at least 1 count or number of positions where at least 1 read starts 
 
 ## n: [type = "numeric"]: 
-## sum of counts (T-level case) or sum of reads mapping to the gene (G-level case)
-
+## sum of counts or sum of reads mapping to the gene 
 ## m_boundary: [type = "numeric]:
 ## threshold on number size of transcript universe, e.g. number of protein coding genes
 
@@ -118,9 +114,6 @@ LogPitman_single_finite <- function(theta,freq,k,n,lot) {
     return(sum(log(param[1] + c(1:(k-1))*(-param[1]/param[2])))-LogAscFact(param[1]+1,n -1)+sum(mapply(LogAscFact,rep(1-(-param[1]/param[2]),k),freq-1)))}
  
 }
-
-
-
 
 
 Gradient_LogPitman_single_finite_m <- function(param,freq,k,n,m_boundary = 50000) {
